@@ -18,9 +18,15 @@
     <ClInclude Include="DynamicArray.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Parsing.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parsing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

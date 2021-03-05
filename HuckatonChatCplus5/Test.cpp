@@ -1,26 +1,14 @@
 #include <iostream>
+#include <string>
 #include "DynamicArray.h"
+#include "Parsing.h"
 
 using namespace std;
 
 int main()
 {
-	DynamicArray<float> test = DynamicArray<float>();
-	try {
-		for (int i = 0; i < 2000000; ++i)
-		{
-			float arg = (i - 1000000.0) / 1000000.0;
-			test.put(exp(-arg * arg));
-		}
-		cout << test[1000000] << " " << test.getSize();
-	}
-	catch (exception &e)
-	{
-		e.what();
-	}
-	catch (...)
-	{
-		cout << "unkn error" << endl;
-	}
+	string s = "newstring";
+	cout << segment("w", "ing", s) << endl;
+	cout << s << endl;
 	return 0;
 }

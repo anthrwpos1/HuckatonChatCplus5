@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="Parsing.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Parsing.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
