@@ -33,3 +33,13 @@ void skipuntil(string tmpl, string& s);
   возвращает участок строки от шаблона from до шаблона to
 */
 string segment(string from, string to, string s);
+
+/*
+  определяет, является ли символ буквой
+*/
+bool isLetter(char c);
+
+/*
+  определяет, является ли символ цифрой
+*/
+bool isDigit(char c);
