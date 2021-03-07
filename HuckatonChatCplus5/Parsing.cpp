@@ -64,3 +64,13 @@ string segment(string from, string to, string s)
 	skipuntil(from, s);
 	return splitBy(to, s);
 }
+
+bool isDigit(char c)
+{
+	return (c >= '0') && (c <= '9');
+}
+
+bool isLetter(char c)
+{
+	return (c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z');
+}
