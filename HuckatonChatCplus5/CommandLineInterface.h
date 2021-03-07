@@ -6,14 +6,18 @@ using namespace std;
 
 class CommandLineInterface
 {
-	int currentLoginID = -1;
-	string username = "";
-	string password;
-	Database db;
-	bool correctName(string s);
+	int _currentLoginID = -1;
+	string _username = "";
+	string _password;
+	Database _db;
+	bool _exit = false;
 public:
 	void parseCommand();
-	void parseLogin(string);
+	void parseLogin(string&);
+	void callRegister();
 	void callLogin();
 	void callLogout();
+	void callExit();
+	void showChatMsgs();
+	bool shouldExit();
 };

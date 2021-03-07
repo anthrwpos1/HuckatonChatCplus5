@@ -74,3 +74,16 @@ bool isLetter(char c)
 {
 	return (c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z');
 }
+
+
+bool correctName(string s)
+{
+	if (s.empty()) return false;
+	if (!isLetter(s[0])) return false;
+	for (string::iterator it = s.begin(); it != s.end(); ++it)
+	{
+		char c = (*it);
+		if ((!isDigit(c)) && (!isLetter(c)) && (c != '_')) return false;
+	}
+	return true;
+}

@@ -24,6 +24,25 @@ public:
 	DynamicArray() : _array(new T[initialSize]), _size(initialSize), _lastElement(0)
 	{}
 
+	DynamicArray(const DynamicArray& other) : _array(new T[other._size]), _size(other._size), _lastElement(other._lastElement)
+	{
+		for (int i = 0; i < _lastElement; ++i)
+		{
+			_array[i] = other._array[i];
+		}
+	}
+
+	DynamicArray(DynamicArray&& other) : _array(other._array), _size(other._size), _lastElement(other._lastElement)
+	{
+		other._array = nullptr;
+		other._size = 0;
+		other._lastElement = 0;
+	}
+
+	DynamicArray& operator=(const DynamicArray& other) = delete;
+
+	DynamicArray& operator=(const DynamicArray&& other) = delete;
+
 	void put(T element)
 	{
 		if (_lastElement == _size) resize(_size + _size / 2);

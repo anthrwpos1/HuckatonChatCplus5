@@ -6,16 +6,18 @@
 
 class Database
 {
-	DynamicArray<User> users;
-	DynamicArray<Message> messages;
+	DynamicArray<User> _users;
+	DynamicArray<Message> _messages;
+	int searchUserByName(string);
+	string searchUserByID(int);
 public:
 	Database();
-	void addUser(string username, string password);
+	int addUser(string username, string password);
 	void deleteUser(string);
-	bool checkPassword(string username, string password);
-	void addChatMessage(string);
+	int checkPassword(string username, string password);
+	void addChatMessage(string sender, string);
 	void addPrivateMessage(string sender, string target, string message);
-	DynamicArray<Message> getChatMessages(int num);//показать num последних сообщений
-	DynamicArray<Message> getChatMessages();//показать все сообщения
+	DynamicArray<string> getChatMessages(int num);//показать num последних сообщений
+	DynamicArray<string> getChatMessages();//показать все сообщения
 	DynamicArray<Message> getPrivateMessage(string username);//показать личные сообщения пользователю username
 };
