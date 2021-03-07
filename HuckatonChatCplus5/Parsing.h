@@ -43,3 +43,8 @@ bool isLetter(char c);
   определяет, является ли символ цифрой
 */
 bool isDigit(char c);
+
+/*
+  проверяет корректность строки в качестве имени пользователя
+*/
+bool correctName(string s);
