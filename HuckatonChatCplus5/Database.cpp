@@ -57,15 +57,13 @@ int Database::checkPassword(string username, string password)
 
 void Database::addChatMessage(string sender, string text)
 {
-	int senderID = searchUserByName(sender);
-	_messages.put(Message(senderID, text));
+	_messages.put(Message(sender, text));
 }
 
 void Database::addPrivateMessage(string sender, string target, string message)
 {
-	int senderID = searchUserByName(sender);
 	int targetID = searchUserByName(target);
-	_messages.put(Message(senderID, targetID, message));
+	_messages.put(Message(sender, targetID, message));
 }
 
 DynamicArray<string> Database::getChatMessages()
@@ -76,8 +74,7 @@ DynamicArray<string> Database::getChatMessages()
 	{
 		if (_messages[i].getTarget() == -1)
 		{
-			string senderName = searchUserByID(_messages[i].getWriter());
-			strings.put("<" + senderName + ">: " + _messages[i].getText());
+			strings.put("<" + _messages[i].getWriter() + ">: " + _messages[i].getText());
 		}
 	}
 	return strings;

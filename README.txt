@@ -1,8 +1,10 @@
 Простенький консольный чат.
 Команды:
-!login [username] [password]
-!logout
-!register [username] [password]
-!exit
+!login [username] [password]            - залогиниться
+!logout                                 - разлогиниться
+!register [username] [password]         - зарегистрировать юзера
+!exit                                   - выход
+!pm [(username)] message                - написать личное сообщение
+!getPM                                  - получить личные сообщения
 
 простой текст - сообщение в чат.

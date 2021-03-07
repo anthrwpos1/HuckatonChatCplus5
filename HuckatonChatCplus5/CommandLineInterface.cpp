@@ -39,6 +39,18 @@ void CommandLineInterface::parseCommand()
 			callRegister();
 			showChatMsgs();
 		}
+		else if (command == "!pm")
+		{
+			if (_currentLoginID == -1) throw CLIException("Please log in to write to other users!");
+			parsePM(s);
+			callPM(s);
+		}
+		else if (command == "!getPM")
+		{
+			if (_currentLoginID == -1) throw CLIException("Please log in to receive messages!");
+			parseGetPM();
+			callGetPM();
+		}
 		else throw CLIException("unknown command: " + command);
 	}
 	else
@@ -77,6 +89,36 @@ void CommandLineInterface::parseLogin(string& s)
 	}
 }
 
+void CommandLineInterface::parsePM(string& s)
+{
+	if (startWith("(", s))
+	{
+		skipuntil("(", s);
+		string target = splitBy(")", s);
+		if (!correctName(target))
+		{
+			throw CLIException("incorrect user name " + target);
+		}
+		_PMTarget = target;
+	}
+	else
+	{
+		string target;
+		cout << "enter user name who received message" << endl;
+		getline(cin, target);
+		if (!correctName(target))
+		{
+			throw CLIException("incorrect user name " + target);
+		}
+		_PMTarget = target;
+	}
+}
+
+void CommandLineInterface::parseGetPM()
+{
+	//TODO можно что нибудь придумать
+}
+
 void CommandLineInterface::callRegister()
 {
 	_currentLoginID = _db.addUser(_username, _password);
@@ -99,6 +141,22 @@ void CommandLineInterface::callLogout()
 void CommandLineInterface::callExit()
 {
 	_exit = true;
+}
+
+void CommandLineInterface::callPM(string message)
+{
+	_db.addPrivateMessage(_username, _PMTarget, message);
+}
+
+void CommandLineInterface::callGetPM()
+{
+	DynamicArray<Message> msgs = _db.getPrivateMessage(_username);
+	cout << "private messages:" << endl;
+	for (int i = 0; i < msgs.getSize(); ++i)
+	{
+		cout << "<" << msgs[i].getWriter() << ">: " << msgs[i].getText() << endl;
+	}
+	cout << "---" << endl;
 }
 
 void CommandLineInterface::showChatMsgs()
