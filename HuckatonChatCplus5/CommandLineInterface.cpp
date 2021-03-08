@@ -24,7 +24,7 @@ void CommandLineInterface::parseCommand()
 			parseLogin(s);
 			if (!s.empty()) throw CLIException("illegal parameter(s): " + s);
 			callLogin();
-			showCountPM(_username);
+			showCountPM();
 			showChatMsgs();
 		}
 		else if (command == "!logout")
@@ -107,7 +107,7 @@ void CommandLineInterface::parsePM(string& s)
 		}
 		_PMTarget = target;
 	}
-	else
+	else if (_PMTarget == "")
 	{
 		string target;
 		cout << "enter user name who received message" << endl;
@@ -127,12 +127,14 @@ void CommandLineInterface::parseGetPM()
 
 void CommandLineInterface::callRegister()
 {
+	_PMTarget = "";
 	_currentLoginID = _db.addUser(_username, _password);
 	_password = "";
 }
 
 void CommandLineInterface::callLogin()
 {
+	_PMTarget = "";
 	_currentLoginID = _db.checkPassword(_username, _password);
 	_password = "";
 	if (_currentLoginID == -1) throw CLIException("Login/password incorrect");
@@ -142,6 +144,7 @@ void CommandLineInterface::callLogout()
 {
 	_currentLoginID = -1;
 	_username = "";
+	_PMTarget = "";
 }
 
 void CommandLineInterface::callExit()
@@ -181,8 +184,8 @@ bool CommandLineInterface::shouldExit()
 	return _exit;
 }
 
-void CommandLineInterface::showCountPM(string target) {
-	DynamicArray<Message> pm = _db.getPrivateMessage(target);
+void CommandLineInterface::showCountPM() {
+	DynamicArray<Message> pm = _db.getPrivateMessage(_username);
 	int countpm = pm.getSize();
-	if(countpm)	cout << "You have " << pm.getSize() << " private message." << endl;
+	if(countpm)	cout << "You have " << pm.getSize() << " private messages." << endl;
 }
