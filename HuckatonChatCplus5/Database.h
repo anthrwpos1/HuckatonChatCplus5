@@ -19,5 +19,5 @@ public:
 	void addPrivateMessage(string sender, string target, string message);
 	DynamicArray<string> getChatMessages(int num);//показать num последних сообщений
 	DynamicArray<string> getChatMessages();//показать все сообщения
-	DynamicArray<Message> getPrivateMessage(string username);//показать личные сообщения пользователю username
+	DynamicArray<Message> getPrivateMessage(int userID);//показать личные сообщения пользователю username
 };

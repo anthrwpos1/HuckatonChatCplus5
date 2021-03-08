@@ -105,9 +105,9 @@ void CommandLineInterface::parsePM(string& s)
 		{
 			throw CLIException("incorrect user name " + target);
 		}
-		_PMTarget = target;
+		_PMDest = target;
 	}
-	else if (_PMTarget == "")
+	else if (_PMDest == "")
 	{
 		string target;
 		cout << "enter user name who received message" << endl;
@@ -116,7 +116,7 @@ void CommandLineInterface::parsePM(string& s)
 		{
 			throw CLIException("incorrect user name " + target);
 		}
-		_PMTarget = target;
+		_PMDest = target;
 	}
 }
 
@@ -127,14 +127,14 @@ void CommandLineInterface::parseGetPM()
 
 void CommandLineInterface::callRegister()
 {
-	_PMTarget = "";
+	_PMDest = "";
 	_currentLoginID = _db.addUser(_username, _password);
 	_password = "";
 }
 
 void CommandLineInterface::callLogin()
 {
-	_PMTarget = "";
+	_PMDest = "";
 	_currentLoginID = _db.checkPassword(_username, _password);
 	_password = "";
 	if (_currentLoginID == -1) throw CLIException("Login/password incorrect");
@@ -144,7 +144,7 @@ void CommandLineInterface::callLogout()
 {
 	_currentLoginID = -1;
 	_username = "";
-	_PMTarget = "";
+	_PMDest = "";
 }
 
 void CommandLineInterface::callExit()
@@ -154,16 +154,16 @@ void CommandLineInterface::callExit()
 
 void CommandLineInterface::callPM(string message)
 {
-	_db.addPrivateMessage(_username, _PMTarget, message);
+	_db.addPrivateMessage(_username, _PMDest, message);
 }
 
 void CommandLineInterface::callGetPM()
 {
-	DynamicArray<Message> msgs = _db.getPrivateMessage(_username);
+	DynamicArray<Message> msgs = _db.getPrivateMessage(_currentLoginID);
 	cout << "private messages:" << endl;
 	for (int i = 0; i < msgs.getSize(); ++i)
 	{
-		cout << "<" << msgs[i].getWriter() << ">: " << msgs[i].getText() << endl;
+		cout << "<" << msgs[i].getSender() << ">: " << msgs[i].getText() << endl;
 	}
 	cout << "---" << endl;
 }
@@ -185,7 +185,7 @@ bool CommandLineInterface::shouldExit()
 }
 
 void CommandLineInterface::showCountPM() {
-	DynamicArray<Message> pm = _db.getPrivateMessage(_username);
+	DynamicArray<Message> pm = _db.getPrivateMessage(_currentLoginID);
 	int countpm = pm.getSize();
 	if(countpm)	cout << "You have " << pm.getSize() << " private messages." << endl;
 }
