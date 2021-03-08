@@ -10,7 +10,12 @@ using namespace std;
 void CommandLineInterface::parseCommand()
 {
 	string s;
-	getline(cin, s);
+	if(_currentLoginID != -1)
+	{
+		cout << "[" << _username << "] ";
+		getline(cin, s);
+	}
+	else getline(cin, s);
 	if (startWith("!", s))
 	{
 		string command = splitBy(" ", s);
