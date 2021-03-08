@@ -22,6 +22,7 @@ class CommandLineInterface
 	void callPM(string);
 	void callGetPM();
 	void showChatMsgs();
+	void showCountPM(string);
 public:
 	void parseCommand();
 	bool shouldExit();

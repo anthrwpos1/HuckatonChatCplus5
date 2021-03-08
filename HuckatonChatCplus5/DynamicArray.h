@@ -1,5 +1,6 @@
 #pragma once
-#include <exception>
+//#include <exception>
+#include<stdexcept>
 
 template <typename T>
 class DynamicArray
@@ -51,7 +52,7 @@ public:
 
 	T& operator[](int index)
 	{
-		if (index >= _lastElement) throw std::exception("out of bound");
+		if (index >= _lastElement) throw std::runtime_error("out of bound");
 		return _array[index];
 	}
 

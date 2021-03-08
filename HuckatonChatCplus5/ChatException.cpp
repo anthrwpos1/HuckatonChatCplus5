@@ -1,10 +1,10 @@
 #include "ChatException.h"
 
-ChatException::ChatException(std::string description) : exception(description.c_str())
+ChatException::ChatException(std::string description) : runtime_error(description.c_str())
 {
 }
 
-char const * ChatException::what() const
+char const * ChatException::what() const noexcept
 {
-	return exception::what();
+	return runtime_error::what();
 }

@@ -19,6 +19,7 @@ void CommandLineInterface::parseCommand()
 			parseLogin(s);
 			if (!s.empty()) throw CLIException("illegal parameter(s): " + s);
 			callLogin();
+			showCountPM(_username);
 			showChatMsgs();
 		}
 		else if (command == "!logout")
@@ -173,4 +174,10 @@ void CommandLineInterface::showChatMsgs()
 bool CommandLineInterface::shouldExit()
 {
 	return _exit;
+}
+
+void CommandLineInterface::showCountPM(string target) {
+	DynamicArray<Message> pm = _db.getPrivateMessage(target);
+	int countpm = pm.getSize();
+	if(countpm)	cout << "You have " << pm.getSize() << " private message." << endl;
 }

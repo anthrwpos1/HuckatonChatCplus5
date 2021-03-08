@@ -10,7 +10,7 @@ int Database::searchUserByName(string username)
 	{
 		if (_users[i].getuserName() == username) return _users[i].getUserID();
 	}
-	throw ChatException("user " + username + "doesn't exists");
+	throw ChatException("user " + username + " doesn't exists");
 	return -1;
 }
 

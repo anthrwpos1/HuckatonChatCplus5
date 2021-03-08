@@ -1,10 +1,10 @@
 #include "CLIException.h"
 
-CLIException::CLIException(std::string description) : exception(description.c_str())
+CLIException::CLIException(std::string description) : runtime_error(description.c_str())
 {
 }
 
-char const * CLIException::what() const
+char const * CLIException::what() const noexcept
 {
-	return exception::what();
+	return runtime_error::what();
 }
