@@ -16,6 +16,8 @@ public:
 	int checklogin(string login, long long passHash);
 	string getuserName();
 	int getUserID();
+	static int getCounter();
+	static void setCounter(int);
 };
 
 long long getHash(string);

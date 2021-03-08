@@ -1,7 +1,11 @@
 #include "Database.h"
 #include "ChatException.h"
 #include "Parsing.h"
+#include "Saver.h"
+#include "Loader.h"
 #include <memory>
+
+//#include <iostream>
 
 int Database::searchUserByName(string username)
 {
@@ -27,6 +31,32 @@ string Database::searchUserByID(int userID)
 
 Database::Database() : _users(DynamicArray<User>()), _messages(DynamicArray<Message>())
 {
+	Loader<int> counters("statics.bin");
+	int *temp = nullptr;
+	if (counters.read(temp) > 0)
+	{
+		User::setCounter(*temp);
+		delete temp;
+	}
+	if (counters.read(temp) > 0)
+	{
+		Message::setCounter(*temp);
+		delete temp;
+	}
+	Loader<User> users("users.bin");
+	User *utemp = nullptr;
+	while (users.read(utemp) > 0)
+	{
+		_users.put(*utemp);
+		delete utemp;
+	}
+	Loader<Message> messages("messages.bin");
+	Message *mtemp = new Message();
+	while (messages.read(mtemp) > 0)
+	{
+		_messages.put(*mtemp);
+		delete mtemp;
+	}
 }
 
 int Database::addUser(string username, string password)
@@ -90,4 +120,23 @@ DynamicArray<Message> Database::getPrivateMessage(int userID)
 		if (_messages[i].getDest() == userID) strings.put(_messages[i]);
 	}
 	return strings;
+}
+
+void Database::saveState()
+{
+	Saver<int> counters("statics.bin");
+	counters.write(User::getCounter());
+	counters.write(Message::getCounter());
+	Saver<User> users("users.bin");
+	int size = _users.getSize();
+	for (int i = 0; i < size; ++i)
+	{
+		users.write(_users[i]);
+	}
+	Saver<Message> messages("messages.bin");
+	size = _messages.getSize();
+	for (int i = 0; i < size; ++i)
+	{
+		messages.write(_messages[i]);
+	}
 }

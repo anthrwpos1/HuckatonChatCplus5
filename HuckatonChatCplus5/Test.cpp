@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	CommandLineInterface cli{};
-	cout << "chat ver. 0.1beta" << endl;
+	cout << "chat ver. 1.0" << endl;
 	while (!cli.shouldExit())
 	{
 		try

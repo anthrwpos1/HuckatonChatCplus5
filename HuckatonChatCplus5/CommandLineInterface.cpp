@@ -149,6 +149,7 @@ void CommandLineInterface::callLogout()
 
 void CommandLineInterface::callExit()
 {
+	_db.saveState();
 	_exit = true;
 }
 

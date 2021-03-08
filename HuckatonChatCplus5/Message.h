@@ -4,7 +4,6 @@
 class Message
 {
 	static int num;		//уникальный номер, который получает id
-	static int messageCounter;
 	int _id;
 	std::string _sender;
 	int _destID;
@@ -20,4 +19,6 @@ public:
 	int getID();
 	std::string getText();
 
+	static int getCounter();
+	static void setCounter(int);
 };

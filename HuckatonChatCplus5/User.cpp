@@ -26,6 +26,16 @@ int User::getUserID()
 	return _id;
 }
 
+int User::getCounter()
+{
+	return userCounter;
+}
+
+void User::setCounter(int x)
+{
+	userCounter = x;
+}
+
 //закос под хеш-функцию
 long long getHash(string text)
 {

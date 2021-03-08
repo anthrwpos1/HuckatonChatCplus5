@@ -20,4 +20,5 @@ public:
 	DynamicArray<string> getChatMessages(int num);//показать num последних сообщений
 	DynamicArray<string> getChatMessages();//показать все сообщения
 	DynamicArray<Message> getPrivateMessage(int userID);//показать личные сообщения пользователю username
+	void saveState();
 };
