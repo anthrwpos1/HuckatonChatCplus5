@@ -6,7 +6,7 @@ template <typename T>
 class DynamicArray
 {
 private:
-	const int initialSize = 2;
+	const int initialSize = 64;
 	T* _array;
 	int _size;
 	int _lastElement;
@@ -25,13 +25,15 @@ public:
 	DynamicArray() : _array(new T[initialSize]), _size(initialSize), _lastElement(0)
 	{}
 
-	DynamicArray(const DynamicArray& other) : _array(new T[other._size]), _size(other._size), _lastElement(other._lastElement)
+	DynamicArray(const DynamicArray& other) = delete;// : _array(new T[other._size]), _size(other._size), _lastElement(other._lastElement)
+	/*
 	{
 		for (int i = 0; i < _lastElement; ++i)
 		{
 			_array[i] = other._array[i];
 		}
 	}
+	*/
 
 	DynamicArray(DynamicArray&& other) : _array(other._array), _size(other._size), _lastElement(other._lastElement)
 	{
@@ -42,7 +44,15 @@ public:
 
 	DynamicArray& operator=(const DynamicArray& other) = delete;
 
-	DynamicArray& operator=(const DynamicArray&& other) = delete;
+	DynamicArray& operator=(DynamicArray&& other)
+	{
+		if (_size) delete[] _array;
+		_size = other._size;
+		_array = other._array;
+		other._array = nullptr;
+		other._size = 0;
+		return *this;
+	}
 
 	void put(T element)
 	{

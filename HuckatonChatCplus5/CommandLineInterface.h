@@ -9,7 +9,7 @@ class CommandLineInterface
 	int _currentLoginID = -1;
 	string _username = "";
 	string _password;
-	string _PMTarget = "";
+	string _PMDest = "";
 	Database _db;
 	bool _exit = false;
 	void parseLogin(string&);
@@ -22,7 +22,7 @@ class CommandLineInterface
 	void callPM(string);
 	void callGetPM();
 	void showChatMsgs();
-	void showCountPM(string);
+	void showCountPM();
 public:
 	void parseCommand();
 	bool shouldExit();

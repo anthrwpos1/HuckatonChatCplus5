@@ -6,8 +6,8 @@ class Message
 	static int num;		//уникальный номер, который получает id
 	static int messageCounter;
 	int _id;
-	std::string _writer;
-	int _targetID;
+	std::string _sender;
+	int _destID;
 	std::string _text;
 public:
 	Message();
@@ -15,8 +15,8 @@ public:
 	Message(std::string writer, int target, std::string text);//личное сообщение
 
 	bool searchByTarget(int);
-	std::string getWriter();
-	int getTarget();
+	std::string getSender();
+	int getDest();
 	int getID();
 	std::string getText();
 

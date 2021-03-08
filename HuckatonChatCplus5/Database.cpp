@@ -72,22 +72,22 @@ DynamicArray<string> Database::getChatMessages()
 	int size = _messages.getSize();
 	for (int i = 0; i < size; ++i)
 	{
-		if (_messages[i].getTarget() == -1)
+		if (_messages[i].getDest() == -1)
 		{
-			strings.put("<" + _messages[i].getWriter() + ">: " + _messages[i].getText());
+			strings.put("<" + _messages[i].getSender() + ">: " + _messages[i].getText());
 		}
 	}
 	return strings;
 }
 
-DynamicArray<Message> Database::getPrivateMessage(string username)
+DynamicArray<Message> Database::getPrivateMessage(int userID)
 {
 	DynamicArray<Message> strings = DynamicArray<Message>();
 	int size = _messages.getSize();
-	int userID = searchUserByName(username);
+	//int userID = searchUserByName(username);
 	for (int i = 0; i < size; ++i)
 	{
-		if (_messages[i].getTarget() == userID) strings.put(_messages[i]);
+		if (_messages[i].getDest() == userID) strings.put(_messages[i]);
 	}
 	return strings;
 }
