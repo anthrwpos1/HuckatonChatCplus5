@@ -33,30 +33,14 @@ Database::Database() : _users(DynamicArray<User>()), _messages(DynamicArray<Mess
 {
 	Loader<int> counters("statics.bin");
 	int *temp = nullptr;
-	if (counters.read(temp) > 0)
-	{
-		User::setCounter(*temp);
-		delete temp;
-	}
-	if (counters.read(temp) > 0)
-	{
-		Message::setCounter(*temp);
-		delete temp;
-	}
+	if (counters.read(temp) > 0) User::setCounter(*temp);
+	if (counters.read(temp) > 0) Message::setCounter(*temp);
 	Loader<User> users("users.bin");
 	User *utemp = nullptr;
-	while (users.read(utemp) > 0)
-	{
-		_users.put(*utemp);
-		delete utemp;
-	}
+	while (users.read(utemp) > 0) _users.put(*utemp);
 	Loader<Message> messages("messages.bin");
 	Message *mtemp = new Message();
-	while (messages.read(mtemp) > 0)
-	{
-		_messages.put(*mtemp);
-		delete mtemp;
-	}
+	while (messages.read(mtemp) > 0) _messages.put(*mtemp);
 }
 
 int Database::addUser(string username, string password)

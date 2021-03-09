@@ -5,8 +5,10 @@ template <typename T>
 class Loader
 {
 	ifstream _descriptor;
+	void* _tempobject;
+	int _tosize;
 public:
-	Loader(string filename) : _descriptor(filename, ofstream::binary)
+	Loader(string filename) : _descriptor(filename, ofstream::binary), _tempobject(NULL), _tosize(0)
 	{	}
 	void seekfromEnd(int pos)
 	{
@@ -31,10 +33,19 @@ public:
 		obj = nullptr;
 		_descriptor.read(sizeBytes, sizeof(size));
 		if (_descriptor.tellg() == -1) return 0;
-		char* bytes = new char[size];
+		if (!_tempobject)
+		{
+			_tempobject = malloc(size);
+			_tosize = size;
+		}
+		if (size > _tosize)
+		{
+			_tempobject = realloc(_tempobject, size);
+			_tosize = size;
+		}
+		char* bytes = (char*) _tempobject;
 		if (_descriptor.tellg() == -1)
 		{
-			delete[] bytes;
 			return -1;
 		}
 		_descriptor.read(bytes, size);
@@ -44,5 +55,6 @@ public:
 	~Loader()
 	{
 		_descriptor.close();
+		free(_tempobject);
 	}
 };
