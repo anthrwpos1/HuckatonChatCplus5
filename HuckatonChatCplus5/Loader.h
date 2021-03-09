@@ -1,14 +1,22 @@
 #pragma once
 #include <fstream>
-template <typename T>
 class Loader
 {
 	ifstream _descriptor;
 	void* _tempobject;		//место в куче для временного хранения вычитываемого объекта
 	int _tosize;
+	int _filesize;
+	bool _staticSegment;
+	const char* ds = "Dynamic segment";
+	const char* ss = "Static segment-";
+	const int checkbytes = 16;
 public:
-	Loader(string filename) : _descriptor(filename, ofstream::binary), _tempobject(NULL), _tosize(0)//открытие файла
-	{	}
+	Loader(string filename) : _descriptor(filename, ofstream::binary), _tempobject(NULL), _tosize(0), _staticSegment(false)//открытие файла
+	{	
+		_descriptor.seekg(0, ifstream::end);
+		_filesize = _descriptor.tellg();
+		_descriptor.seekg(0, ifstream::beg);
+	}
 	void seekfromEnd(int pos)
 	{
 		_descriptor.seekg(pos, ifstream::end);
@@ -16,14 +24,6 @@ public:
 	void seekfromBeg(int pos)
 	{
 		_descriptor.seekg(pos, ifstream::beg);
-	}
-	long getSize()
-	{
-		long cur = _descriptor.tellg();
-		_descriptor.seekg(0, ifstream::end);
-		long size = _descriptor.tellg();
-		_descriptor.seekg(cur, ifstream::beg);
-		return size;
 	}
 	/*
 	  функция загрузки объекта из файла. Возвращает по ссылке указатель 
@@ -33,11 +33,16 @@ public:
 	  адресу будут записаны другие объекты, а при уничтожении объекта загрузчика
 	  указатель станет невалиден.
 	*/
-	int read(T*& obj)
+	template <typename T>
+	int readDynamic(T*& obj)
 	{
+		_staticSegment = false;
 		int size = 0;
 		char* sizeBytes = (char*)&size;
 		obj = nullptr;
+		char test[16];
+		_descriptor.read(test, 16);
+		if (!check(test, ds)) return -1;
 		_descriptor.read(sizeBytes, sizeof(size));	//вычитываем размер объекта
 		if (_descriptor.tellg() == -1) return 0;	//дескриптор становится -1 при ошибках чтения
 		if (!_tempobject)
@@ -60,6 +65,40 @@ public:
 		obj = (T*)bytes;
 		return size;
 	}
+
+	/*
+		функция загрузки объекта постоянного размера
+		Передает данные по ссылке.
+	*/
+	template<typename T>
+	int readStatic(T& obj)
+	{
+		int size = sizeof(obj);
+		if (!_staticSegment)
+		{
+			char test[16];
+			_descriptor.read(test, 16);
+			if (!check(test, ss)) return -1;
+			_staticSegment = true;
+		}
+		char* bytes = (char*)&obj;
+		_descriptor.read(bytes, size);						//читаем объект
+		if (_descriptor.tellg() == -1)
+		{
+			return -1;
+		}
+		return size;
+	}
+	
+	bool check(const char* text1, const char* text2)
+	{
+		for (int i = 0; i < checkbytes; ++i)
+		{
+			if (text1[i] != text2[i]) return false;
+		}
+		return true;
+	}
+
 	~Loader()
 	{
 		_descriptor.close();

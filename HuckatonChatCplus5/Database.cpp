@@ -5,7 +5,7 @@
 #include "Loader.h"
 #include <memory>
 
-//#include <iostream>
+#include <iostream>
 
 int Database::searchUserByName(string username)
 {
@@ -31,16 +31,40 @@ string Database::searchUserByID(int userID)
 
 Database::Database() : _users(DynamicArray<User>()), _messages(DynamicArray<Message>())
 {
-	Loader<int> counters("statics.bin");
-	int *temp = nullptr;
-	if (counters.read(temp) > 0) User::setCounter(*temp);
-	if (counters.read(temp) > 0) Message::setCounter(*temp);
-	Loader<User> users("users.bin");
-	User *utemp = nullptr;
-	while (users.read(utemp) > 0) _users.put(*utemp);
-	Loader<Message> messages("messages.bin");
-	Message *mtemp = new Message();
-	while (messages.read(mtemp) > 0) _messages.put(*mtemp);
+	try 
+	{
+		Loader loader("data.bin");													//открываем файл
+		int temp = 0;
+		int size = 0;
+		if (loader.readStatic(temp) > 0) User::setCounter(temp);					//вычитываем статические переменные
+		else throw ChatException("user counter not loaded, using defaults");
+		if (loader.readStatic(temp) > 0) Message::setCounter(temp);
+		else throw ChatException("message counter not loaded, using defaults");
+		if (loader.readStatic(temp) > 0) size = temp;								//вычитываем число юзеров
+		else throw ChatException("users num not loaded, using defaults");
+		User *utemp = nullptr;
+		for (int i = 0; i < size; ++i)
+		{
+			if (loader.readDynamic(utemp) > 0) _users.put(*utemp);					//вычитываем самих юзеров
+			else throw ChatException("error loading user, using defaults");
+		}
+		if (loader.readStatic(temp) > 0) size = temp;								//вычитываем число сообщений
+		else throw ChatException("messages num not loaded, using defaults");
+		Message *mtemp = nullptr;
+		for (int i = 0; i < size; ++i)
+		{
+			if (loader.readDynamic(mtemp) > 0) _messages.put(*mtemp);				//вычитываем сами сообщения
+			else throw ChatException("error loading messages, using defaults");
+		}
+	}
+	catch (ChatException e)						//если на каком-то этапе что-то не получилось, инициализируем пустой чат
+	{
+		std::cout << e.what() << std::endl;		//выводим что не получилось
+		User::setCounter(1);
+		Message::setCounter(0);
+		_users = DynamicArray<User>();
+		_messages = DynamicArray<Message>();
+	}
 }
 
 int Database::addUser(string username, string password)
@@ -88,7 +112,7 @@ DynamicArray<string> Database::getChatMessages()
 	{
 		if (_messages[i].getDest() == -1)
 		{
-			strings.put("<" + _messages[i].getSender() + ">: " + _messages[i].getText());
+			strings.put("<" + _messages[i].getSender() + ">:" + _messages[i].getText());
 		}
 	}
 	return strings;
@@ -108,19 +132,19 @@ DynamicArray<Message> Database::getPrivateMessage(int userID)
 
 void Database::saveState()
 {
-	Saver<int> counters("statics.bin");
-	counters.write(User::getCounter());
-	counters.write(Message::getCounter());
-	Saver<User> users("users.bin");
-	int size = _users.getSize();
+	Saver saver("data.bin");					//открываем файл
+	saver.writeStatic(User::getCounter());		//записываем статические переменные
+	saver.writeStatic(Message::getCounter());
+	int size = _users.getSize();				//записываем число юзеров
+	saver.writeStatic(size);
 	for (int i = 0; i < size; ++i)
 	{
-		users.write(_users[i]);
+		saver.writeDynamic(_users[i]);			//записываем самих юзеров
 	}
-	Saver<Message> messages("messages.bin");
-	size = _messages.getSize();
+	size = _messages.getSize();					//записываем число сообщений
+	saver.writeStatic(size);
 	for (int i = 0; i < size; ++i)
 	{
-		messages.write(_messages[i]);
+		saver.writeDynamic(_messages[i]);		//записываем сами сообщения
 	}
 }

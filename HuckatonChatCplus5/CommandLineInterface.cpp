@@ -164,7 +164,7 @@ void CommandLineInterface::callGetPM()
 	cout << "private messages:" << endl;
 	for (int i = 0; i < msgs.getSize(); ++i)
 	{
-		cout << "<" << msgs[i].getSender() << ">: " << msgs[i].getText() << endl;
+		cout << "<" << msgs[i].getSender() << ">:" << msgs[i].getText() << endl;
 	}
 	cout << "---" << endl;
 }
@@ -188,5 +188,5 @@ bool CommandLineInterface::shouldExit()
 void CommandLineInterface::showCountPM() {
 	DynamicArray<Message> pm = _db.getPrivateMessage(_currentLoginID);
 	int countpm = pm.getSize();
-	if(countpm)	cout << "You have " << pm.getSize() << " private messages." << endl;
+	if(countpm)	cout << "You have " << countpm << (countpm == 1 ? " private message." : " private messages.") << endl;
 }
