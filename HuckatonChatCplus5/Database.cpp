@@ -39,7 +39,7 @@ Database::Database() : _users(DynamicArray<User>()), _messages(DynamicArray<Mess
 	User *utemp = nullptr;
 	while (users.read(utemp) > 0) _users.put(*utemp);
 	Loader<Message> messages("messages.bin");
-	Message *mtemp = new Message();
+	Message *mtemp = nullptr;
 	while (messages.read(mtemp) > 0) _messages.put(*mtemp);
 }
 
@@ -88,7 +88,7 @@ DynamicArray<string> Database::getChatMessages()
 	{
 		if (_messages[i].getDest() == -1)
 		{
-			strings.put("<" + _messages[i].getSender() + ">: " + _messages[i].getText());
+			strings.put("<" + _messages[i].getSender() + ">:" + _messages[i].getText());
 		}
 	}
 	return strings;
